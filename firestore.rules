@@ -1,0 +1,90 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Primitive Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-\\.]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 3. Entity Handlers
+    
+    // User Profile
+    match /users/{userId} {
+      function isValidUser(data) {
+        return data.uid == request.auth.uid
+          && (data.email == null || data.email is string)
+          && (data.displayName == null || data.displayName is string)
+          && (data.photoURL == null || data.photoURL is string)
+          && (data.streak == null || data.streak is number)
+          && (data.level == null || data.level is number)
+          && (data.points == null || data.points is number)
+          && (data.lastActive == null || data.lastActive is string || data.lastActive is timestamp);
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming());
+    }
+
+    // Mastered Words
+    match /users/{userId}/masteredWords/{wordId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // Saved Words
+    match /users/{userId}/savedWords/{wordId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // Chat Sessions
+    match /users/{userId}/chatSessions/{sessionId} {
+      function isValidChatSession(data) {
+        return (data.title == null || data.title is string)
+          && (data.updatedAt == null || data.updatedAt is timestamp || data.updatedAt is string)
+          && (data.createdAt == null || data.createdAt is timestamp || data.createdAt is string);
+      }
+
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidChatSession(incoming());
+      allow update: if isOwner(userId) && isValidChatSession(incoming());
+      allow delete: if isOwner(userId);
+    }
+
+    // Chat Messages
+    match /users/{userId}/chatSessions/{sessionId}/messages/{messageId} {
+      function isValidChatMessage(data) {
+        return (data.text == null || data.text is string)
+          && (data.role == null || data.role in ['user', 'assistant'])
+          && (data.createdAt == null || data.createdAt is timestamp || data.createdAt is string);
+      }
+
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidChatMessage(incoming());
+    }
+  }
+}

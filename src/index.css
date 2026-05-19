@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@100..900&family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-vocab-surface: var(--vocab-surface);
+  --color-vocab-surface-dim: var(--vocab-surface-dim);
+  --color-vocab-surface-bright: var(--vocab-surface-bright);
+  --color-vocab-surface-container-lowest: var(--vocab-surface-container-lowest);
+  --color-vocab-surface-container-low: var(--vocab-surface-container-low);
+  --color-vocab-surface-container: var(--vocab-surface-container);
+  --color-vocab-surface-container-high: var(--vocab-surface-container-high);
+  --color-vocab-surface-container-highest: var(--vocab-surface-container-highest);
+  
+  --color-vocab-primary: var(--vocab-primary);
+  --color-vocab-primary-container: var(--vocab-primary-container);
+  --color-vocab-secondary: var(--vocab-secondary);
+  --color-vocab-secondary-container: var(--vocab-secondary-container);
+  --color-vocab-tertiary: var(--vocab-tertiary);
+  --color-vocab-tertiary-container: var(--vocab-tertiary-container);
+  
+  --color-vocab-on-surface: var(--vocab-on-surface);
+  --color-vocab-on-surface-variant: var(--vocab-on-surface-variant);
+}
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.03;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+}
+
+:root {
+  --vocab-surface: #0b1326;
+  --vocab-surface-dim: #060e20;
+  --vocab-surface-bright: #31394d;
+  --vocab-surface-container-lowest: #020617;
+  --vocab-surface-container-low: #0f172a;
+  --vocab-surface-container: #171f33;
+  --vocab-surface-container-high: #222a3d;
+  --vocab-surface-container-highest: #2d3449;
+  
+  --vocab-primary: #8ab4f8;
+  --vocab-primary-container: #1e293b;
+  --vocab-secondary: #c084fc;
+  --vocab-secondary-container: #3b0764;
+  --vocab-tertiary: #94a3b8;
+  --vocab-tertiary-container: #0f172a;
+  
+  --vocab-on-surface: #f8fafc;
+  --vocab-on-surface-variant: #64748b;
+}
+
+.high-contrast {
+  --vocab-surface: #000000;
+  --vocab-surface-dim: #000000;
+  --vocab-surface-bright: #111111;
+  --vocab-surface-container-lowest: #000000;
+  --vocab-surface-container-low: #050505;
+  --vocab-surface-container: #0a0a0a;
+  --vocab-surface-container-high: #111111;
+  --vocab-surface-container-highest: #1a1a1a;
+  
+  --vocab-primary: #00fbff;
+  --vocab-primary-container: #004d4f;
+  --vocab-secondary: #ff00ea;
+  --vocab-secondary-container: #4f0049;
+  --vocab-tertiary: #fffb00;
+  --vocab-tertiary-container: #4f4e00;
+  
+  --vocab-on-surface: #ffffff;
+  --vocab-on-surface-variant: #eeeeee;
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(138, 180, 248, 0.5);
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+html {
+  scroll-behavior: auto;
+  overflow-x: hidden;
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.mix-blend-difference {
+  mix-blend-mode: difference;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+@layer base {
+  body {
+    @apply bg-vocab-surface text-vocab-on-surface font-sans antialiased selection:bg-vocab-primary/30;
+    background-image: radial-gradient(circle at 50% 0%, var(--vocab-surface-container), var(--vocab-surface));
+    background-attachment: fixed;
+  }
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+.brand-gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-vocab-primary to-vocab-secondary;
+}
+
+.brand-gradient-bg {
+  @apply bg-gradient-to-br from-vocab-primary-container to-vocab-secondary-container shadow-[0_0_15px_rgba(61,58,206,0.4)];
+}
+
+.terminal-data {
+  @apply font-mono tracking-tighter text-vocab-primary;
+}
+
+.terminal-label {
+  @apply text-[10px] uppercase tracking-[0.2em] text-slate-500;
+}
+
+.pulse-glow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full;
+}

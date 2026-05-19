@@ -1,0 +1,6 @@
+{
+  "name": "VocabX",
+  "description": "An intelligent lexicon ecosystem with scientific spaced-repetition, AI tutors, and exam-focused learning paths.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

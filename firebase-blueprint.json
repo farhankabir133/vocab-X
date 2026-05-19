@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user profile and global stats.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "streak": { "type": "number", "description": "Current daily streak" },
+        "level": { "type": "number", "description": "User level" },
+        "points": { "type": "number", "description": "Experience points" },
+        "lastActive": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "MasteredWord": {
+      "title": "Mastered Word",
+      "description": "A word the user has learned.",
+      "type": "object",
+      "properties": {
+        "word": { "type": "string" },
+        "masteryLevel": { "type": "number", "description": "0-100" },
+        "lastReviewed": { "type": "string", "format": "date-time" },
+        "nextReview": { "type": "string", "format": "date-time" },
+        "interval": { "type": "number", "default": 0 },
+        "easeFactor": { "type": "number", "default": 2.5 },
+        "repetitions": { "type": "number", "default": 0 }
+      },
+      "required": ["word", "masteryLevel"]
+    },
+    "SavedWord": {
+      "title": "Saved Word",
+      "description": "A word the user has bookmarked for later.",
+      "type": "object",
+      "properties": {
+        "word": { "type": "string" },
+        "tag": { "type": "string" },
+        "type": { "type": "string" },
+        "en": { "type": "string" },
+        "bn": { "type": "string" },
+        "savedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["word", "savedAt"]
+    },
+    "ChatSession": {
+      "title": "Chat Session",
+      "description": "An AI Tutor chat session.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "lastMessage": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "A single message in a chat.",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["text", "role", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/masteredWords/{wordId}": {
+      "schema": "MasteredWord",
+      "description": "Words mastered by the user"
+    },
+    "/users/{userId}/savedWords/{wordId}": {
+      "schema": "SavedWord",
+      "description": "Words bookmarked by the user"
+    },
+    "/users/{userId}/chatSessions/{sessionId}": {
+      "schema": "ChatSession",
+      "description": "AI Tutor chat history"
+    },
+    "/users/{userId}/chatSessions/{sessionId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages within a session"
+    }
+  }
+}
